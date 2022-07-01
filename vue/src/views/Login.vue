@@ -19,7 +19,32 @@
       </router-link>
     </p>
   </div>
-  <form class="mt-8 space-y-6" action="#" method="POST">
+  <form class="mt-8 space-y-6" @submit="login">
+    <div
+      v-if="errorMessage"
+      class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded"
+    >
+      {{ errorMessage }}
+      <span
+        @click="errorMessage = ''"
+        class="w-8 h-8 flex items-center justify-center rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)] cursor-pointer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </span>
+    </div>
     <input type="hidden" name="remember" value="true" />
     <div class="rounded-md shadow-sm -space-y-px">
       <div>
@@ -32,6 +57,7 @@
           required=""
           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           placeholder="Email address"
+          v-model="user.email"
         />
       </div>
       <div>
@@ -44,6 +70,7 @@
           required=""
           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           placeholder="Password"
+          v-model="user.password"
         />
       </div>
     </div>
@@ -55,6 +82,7 @@
           name="remember-me"
           type="checkbox"
           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+          v-model="user.remember"
         />
         <label for="remember-me" class="ml-2 block text-sm text-gray-900">
           Remember me
@@ -81,4 +109,29 @@
 
 <script setup>
 import { LockClosedIcon } from "@heroicons/vue/solid";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import store from "../store";
+const router = useRouter();
+
+const user = {
+  email: "",
+  password: "",
+  remember: false,
+};
+
+let errorMessage = ref("");
+
+function login(e) {
+  e.preventDefault();
+
+  store
+    .dispatch("loginUser", user)
+    .then(() => {
+      router.push({ name: "Dashboard" });
+    })
+    .catch((error) => {
+      errorMessage.value = error.response.data.error;
+    });
+}
 </script>
