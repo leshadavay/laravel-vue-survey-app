@@ -149,7 +149,7 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 
 function logout() {
-  store.dispatch("logoutUser").then(() => {
+  store.dispatch("logout").then(() => {
     router.push({
       name: "Login",
     });

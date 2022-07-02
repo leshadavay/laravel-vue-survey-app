@@ -126,7 +126,7 @@ function login(e) {
   e.preventDefault();
 
   store
-    .dispatch("loginUser", user)
+    .dispatch("login", user)
     .then(() => {
       router.push({ name: "Dashboard" });
     })

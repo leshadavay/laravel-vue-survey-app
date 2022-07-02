@@ -113,7 +113,7 @@ function register(e) {
   e.preventDefault();
 
   store
-    .dispatch("registerUser", user)
+    .dispatch("register", user)
     .then((res) => {
       router.push({
         name: "Dashboard",
