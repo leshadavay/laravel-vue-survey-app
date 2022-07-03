@@ -15,19 +15,16 @@
         :to="{ name: 'Register' }"
         class="font-medium text-indigo-600 hover:text-indigo-500"
       >
-        Register for free
+        register for free
       </router-link>
     </p>
   </div>
   <form class="mt-8 space-y-6" @submit="login">
-    <div
-      v-if="errorMessage"
-      class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded"
-    >
-      {{ errorMessage }}
+    <Alert v-if="errorMsg">
+      {{ errorMsg }}
       <span
-        @click="errorMessage = ''"
-        class="w-8 h-8 flex items-center justify-center rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)] cursor-pointer"
+        @click="errorMsg = ''"
+        class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -35,16 +32,16 @@
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          stroke-width="2"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
+            stroke-width="2"
             d="M6 18L18 6M6 6l12 12"
           />
         </svg>
       </span>
-    </div>
+    </Alert>
     <input type="hidden" name="remember" value="true" />
     <div class="rounded-md shadow-sm -space-y-px">
       <div>
@@ -55,9 +52,9 @@
           type="email"
           autocomplete="email"
           required=""
+          v-model="user.email"
           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           placeholder="Email address"
-          v-model="user.email"
         />
       </div>
       <div>
@@ -68,9 +65,9 @@
           type="password"
           autocomplete="current-password"
           required=""
+          v-model="user.password"
           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           placeholder="Password"
-          v-model="user.password"
         />
       </div>
     </div>
@@ -81,8 +78,8 @@
           id="remember-me"
           name="remember-me"
           type="checkbox"
-          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
           v-model="user.remember"
+          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
         />
         <label for="remember-me" class="ml-2 block text-sm text-gray-900">
           Remember me
@@ -91,10 +88,7 @@
     </div>
 
     <div>
-      <button
-        type="submit"
-        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
+      <TButtonLoading :loading="loading" class="w-full relative justify-center">
         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
           <LockClosedIcon
             class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
@@ -102,7 +96,7 @@
           />
         </span>
         Sign in
-      </button>
+      </TButtonLoading>
     </div>
   </form>
 </template>
@@ -112,28 +106,33 @@ import { LockClosedIcon } from "@heroicons/vue/solid";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import store from "../store";
+import Alert from "../components/Alert.vue";
+import TButtonLoading from "../components/core/TButtonLoading.vue";
+
 const router = useRouter();
 
 const user = {
   email: "",
   password: "",
-  remember: false,
 };
-const loading = ref(false);
-let errorMessage = ref("");
+let loading = ref(false);
+let errorMsg = ref("");
 
-function login(e) {
-  e.preventDefault();
+function login(ev) {
+  ev.preventDefault();
+
   loading.value = true;
   store
     .dispatch("login", user)
     .then(() => {
       loading.value = false;
-      router.push({ name: "Dashboard" });
+      router.push({
+        name: "Dashboard",
+      });
     })
-    .catch((error) => {
+    .catch((err) => {
       loading.value = false;
-      errorMessage.value = error.response.data.error;
+      errorMsg.value = err.response.data.error;
     });
 }
 </script>
