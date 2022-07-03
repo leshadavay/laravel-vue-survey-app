@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::post('/logout', [\App\Http\Controllers\AuthController::class,'logout']);
     Route::resource('/survey',\App\Http\Controllers\SurveyController::class);
-
+    Route::get('/dashboard',[\App\Http\Controllers\DashboardController::class,'index']);
 });
 
 

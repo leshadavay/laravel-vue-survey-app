@@ -119,18 +119,20 @@ const user = {
   password: "",
   remember: false,
 };
-
+const loading = ref(false);
 let errorMessage = ref("");
 
 function login(e) {
   e.preventDefault();
-
+  loading.value = true;
   store
     .dispatch("login", user)
     .then(() => {
+      loading.value = false;
       router.push({ name: "Dashboard" });
     })
     .catch((error) => {
+      loading.value = false;
       errorMessage.value = error.response.data.error;
     });
 }

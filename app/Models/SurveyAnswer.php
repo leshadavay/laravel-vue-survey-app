@@ -12,4 +12,9 @@ class SurveyAnswer extends Model
     const UPDATED_AT = null;
 
     use HasFactory;
+
+    public function survey(){
+        $this->belongsTo(Survey::class);
+    }
+
 }
