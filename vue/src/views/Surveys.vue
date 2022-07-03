@@ -18,7 +18,7 @@
           v-for="(survey, ind) in surveys.data"
           :key="survey.id"
           :survey="survey"
-          class="animate-fade-in-down"
+          class="opacity-0 animate-fade-in-down"
           :style="{ animationDelay: `${ind * 0.1}s` }"
           @delete="deleteSurvey(survey)"
         />

@@ -29,5 +29,6 @@ Route::middleware('auth:sanctum')->group(function(){
 Route::post('/login',[\App\Http\Controllers\AuthController::class,'login']);
 Route::post('/register',[\App\Http\Controllers\AuthController::class,'register']);
 
-
+Route::get('/survey-by-slug/{survey:slug}',[\App\Http\Controllers\SurveyController::class,'showForGuest']);
+Route::post('/survey/{survey}/answer',[\App\Http\Controllers\SurveyController::class,'storeAnswer']);
 
